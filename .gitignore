@@ -1,6 +1,12 @@
 # Environment files
 .env
 
+# Content Data (Keep .gitkeep to preserve folder structure if needed, but ignore content)
+data/*
+!data/.gitkeep
+Digests/*
+!Digests/.gitkeep
+
 # Python
 __pycache__/
 *.py[cod]

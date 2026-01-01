@@ -21,13 +21,39 @@ jobs:
           
       - run: pip install -r requirements.txt
       
+      - name: Checkout Private Storage (Optional)
+        if: env.STORAGE_REPO != ''
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.STORAGE_REPO }}
+          token: ${{ secrets.PAT_TOKEN }}
+          path: storage
+          
       - name: Run RSS Poller
-        run: python -m src.poll_rss
+        run: |
+          if [ -n "$STORAGE_REPO" ]; then
+            echo "Using private storage..."
+            mkdir -p storage/data
+            python -m src.poll_rss --data-dir storage/data
+          else
+            echo "Using local storage..."
+            python -m src.poll_rss
+          fi
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          # JINA_API_KEY: ${{ secrets.JINA_API_KEY }} # Optional
+          STORAGE_REPO: ${{ secrets.STORAGE_REPO }}
           
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Commit to Private Storage
+        if: env.STORAGE_REPO != ''
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          repository: storage
+          commit_message: "Auto: RSS poll ingestion"
+          file_pattern: 'data/*'
+          
+      - name: Commit to Local Repo
+        if: env.STORAGE_REPO == ''
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Auto: RSS poll ingestion"
           file_pattern: 'data/*'
@@ -46,10 +72,36 @@ jobs:
           
       - run: pip install -r requirements.txt
       
+      - name: Checkout Private Storage (Optional)
+        if: env.STORAGE_REPO != ''
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.STORAGE_REPO }}
+          token: ${{ secrets.PAT_TOKEN }}
+          path: storage
+      
       - name: Run Weekly Bundler
-        run: python -m src.bundle --days 7
+        run: |
+          if [ -n "$STORAGE_REPO" ]; then
+            mkdir -p storage/Digests
+            python -m src.bundle --days 7 --data-dir storage/data --output-dir storage/Digests
+          else
+            python -m src.bundle --days 7
+          fi
+        env:
+          STORAGE_REPO: ${{ secrets.STORAGE_REPO }}
         
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Commit to Private Storage
+        if: env.STORAGE_REPO != ''
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          repository: storage
+          commit_message: "Auto: Weekly digest bundle"
+          file_pattern: 'Digests/*'
+
+      - name: Commit to Local Repo
+        if: env.STORAGE_REPO == ''
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Auto: Weekly digest bundle"
           file_pattern: 'Digests/*'

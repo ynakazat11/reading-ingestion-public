@@ -22,13 +22,37 @@ jobs:
           
       - run: pip install -r requirements.txt
       
+      - name: Checkout Private Storage (Optional)
+        if: env.STORAGE_REPO != ''
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.STORAGE_REPO }}
+          token: ${{ secrets.PAT_TOKEN }}
+          path: storage
+
       - name: Ingest Article
-        run: python -m src.ingest "${{ inputs.url }}"
+        run: |
+          if [ -n "$STORAGE_REPO" ]; then
+            mkdir -p storage/data
+            python -m src.ingest "${{ inputs.url }}" --data-dir storage/data
+          else
+            python -m src.ingest "${{ inputs.url }}"
+          fi
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          # JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
+          STORAGE_REPO: ${{ secrets.STORAGE_REPO }}
           
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Commit to Private Storage
+        if: env.STORAGE_REPO != ''
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          repository: storage
+          commit_message: "Auto: Ingested ${{ inputs.url }}"
+          file_pattern: 'data/*'
+          
+      - name: Commit to Local Repo
+        if: env.STORAGE_REPO == ''
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Auto: Ingested ${{ inputs.url }}"
           file_pattern: 'data/*'
