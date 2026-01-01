@@ -58,3 +58,8 @@ Add the following actions in order:
 3.  Select **Send to Content Airlock**.
 4.  The shortcut will trigger the GitHub Action `Ingest URL`.
 5.  Wait ~30-60 seconds, and the new file will appear in your repo's `data/` folder!
+
+> [!NOTE]
+> **Using Private Storage?**
+> You do **not** need to change this shortcut. It continues to send requests to your Public Repo, which will automatically route the data to your Private Repo if you've configured the `STORAGE_REPO` secret.
+
