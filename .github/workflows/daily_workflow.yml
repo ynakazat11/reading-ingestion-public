@@ -1,0 +1,55 @@
+name: Content Airlock Pipeline
+
+on:
+  schedule:
+    - cron: '0 8 * * *'      # Daily at 8 AM UTC (RSS poll)
+    - cron: '0 20 * * 5'     # Friday 8 PM UTC (Weekly bundle)
+  workflow_dispatch:          # Manual trigger
+
+jobs:
+  poll-rss:
+    if: github.event.schedule == '0 8 * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - run: pip install -r requirements.txt
+      
+      - name: Run RSS Poller
+        run: python -m src.poll_rss
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # JINA_API_KEY: ${{ secrets.JINA_API_KEY }} # Optional
+          
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto: RSS poll ingestion"
+          file_pattern: 'data/*'
+
+  bundle-weekly:
+    if: github.event.schedule == '0 20 * * 5' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - run: pip install -r requirements.txt
+      
+      - name: Run Weekly Bundler
+        run: python -m src.bundle --days 7
+        
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto: Weekly digest bundle"
+          file_pattern: 'Digests/*'

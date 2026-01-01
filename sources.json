@@ -1,0 +1,19 @@
+{
+    "feeds": [
+        {
+            "name": "Anthropic Blog",
+            "url": "https://www.anthropic.com/rss.xml",
+            "default_category": "GenAI"
+        },
+        {
+            "name": "OpenAI Blog",
+            "url": "https://openai.com/blog/rss.xml",
+            "default_category": "GenAI"
+        },
+        {
+            "name": "Google AI Blog",
+            "url": "https://blog.google/technology/ai/rss/",
+            "default_category": "GenAI"
+        }
+    ]
+}
