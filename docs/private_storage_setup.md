@@ -1,6 +1,6 @@
 # Private Data Storage Setup
 
-If you want to keep your **code public** (to share with others) but your **ingested articles private** (for security), you can configure Content Airlock to store data in a separate private repository.
+If you want to keep your **ingested articles private** (for security), you can configure Content Airlock to store data in a separate private repository.
 
 ## Overview
 
