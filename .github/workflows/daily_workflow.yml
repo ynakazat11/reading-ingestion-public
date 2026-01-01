@@ -2,12 +2,12 @@ name: Content Airlock Pipeline
 
 on:
   schedule:
-    - cron: '0 8 * * *'      # Daily at 8 AM UTC (RSS poll)
+    - cron: '0 8 * * *'      # Daily at 8 AM UTC (RSS + Email poll)
     - cron: '0 20 * * 5'     # Friday 8 PM UTC (Weekly bundle)
   workflow_dispatch:          # Manual trigger
 
 jobs:
-  poll-rss:
+  poll-sources:
     if: github.event.schedule == '0 8 * * *' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
@@ -29,11 +29,25 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
           path: storage
           
-      - name: Run RSS Poller
+      - name: Poll Email Inbox
+        run: |
+          if [ -n "$STORAGE_REPO" ]; then
+            python -m src.email_ingestion --data-dir storage/data || echo "Email ingestion skipped (not configured)"
+          else
+            python -m src.email_ingestion || echo "Email ingestion skipped (not configured)"
+          fi
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          AIRLOCK_EMAIL: ${{ secrets.AIRLOCK_EMAIL }}
+          AIRLOCK_EMAIL_PASSWORD: ${{ secrets.AIRLOCK_EMAIL_PASSWORD }}
+          AIRLOCK_IMAP_SERVER: ${{ secrets.AIRLOCK_IMAP_SERVER }}
+          AIRLOCK_ALLOWED_SENDERS: ${{ secrets.AIRLOCK_ALLOWED_SENDERS }}
+          STORAGE_REPO: ${{ secrets.STORAGE_REPO }}
+
+      - name: Poll RSS Feeds
         run: |
           if [ -n "$STORAGE_REPO" ]; then
             echo "Using private storage..."
-            mkdir -p storage/data
             python -m src.poll_rss --data-dir storage/data
           else
             echo "Using local storage..."
@@ -48,14 +62,14 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           repository: storage
-          commit_message: "Auto: RSS poll ingestion"
+          commit_message: "Auto: Daily ingestion (email + RSS)"
           file_pattern: 'data/*'
           
       - name: Commit to Local Repo
         if: secrets.STORAGE_REPO == ''
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Auto: RSS poll ingestion"
+          commit_message: "Auto: Daily ingestion (email + RSS)"
           file_pattern: 'data/*'
 
   bundle-weekly:

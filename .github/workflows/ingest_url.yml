@@ -1,4 +1,4 @@
-name: Ingest URL
+name: Ingest URL (Manual)
 
 on:
   workflow_dispatch:

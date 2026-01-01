@@ -1,185 +1,172 @@
 # 📱 Save Articles from Your iPhone
 
-This guide shows you how to save any article to your Content Airlock with **just 2 taps** from your iPhone!
+Send any article to your Content Airlock by **sharing it to email**. No tokens, no complicated setup — just share!
 
 ---
 
-## 🎯 What You'll Be Able to Do
+## 🎯 How It Works
 
-When you're done, you can:
-1. Find an interesting article in Safari
-2. Tap the **Share** button  
-3. Tap **"Save to Airlock"**  
-4. ✨ Done! The article is saved automatically!
+1. Find an interesting article
+2. Tap **Share** → **Mail**
+3. Send it to your special Airlock email address
+4. ✨ Done! The article appears in your GitHub repo the next day!
 
----
-
-## 📋 Before You Start (One-Time Setup)
-
-You'll need two things from GitHub:
-
-### 1. Your GitHub Username
-This is the name you use to log into GitHub.  
-Example: If your profile is `github.com/coolperson123`, your username is **coolperson123**
-
-### 2. A Special Password (called a "Token")
-
-Think of this as a **special password** just for this app. Here's how to get one:
-
-1. **Open this link on your phone:** [Create a GitHub Token](https://github.com/settings/tokens/new?scopes=repo&description=iOS%20Shortcut%20for%20Airlock)
-
-2. **Log in** to GitHub if asked
-
-3. You'll see a page with some boxes already checked. Just scroll down and tap **"Generate token"** (the green button)
-
-4. **IMPORTANT:** You'll see a code that starts with `ghp_` — this is your special password!  
-   📋 **Tap to copy it** and paste it somewhere safe (like Notes app) — you can only see it once!
+That's it. No apps to install, no passwords stored on your phone.
 
 ---
 
-## 🛠️ Create the Shortcut (5 minutes)
+## 📋 One-Time Setup (10 minutes)
 
-### Step 1: Open the Shortcuts App
+### Step 1: Create a Dedicated Email Address
 
-Find and open the **Shortcuts** app on your iPhone (it comes pre-installed).
+You have two options:
 
-![Shortcuts app icon - blue square with overlapping colored squares](https://example.com/shortcuts-icon.png)
+**Option A: Use an alias of your existing Gmail (Recommended)**
+- Your existing Gmail already supports aliases!
+- If your email is `yourname@gmail.com`, you can use `yourname+airlock@gmail.com`
+- All emails to that address go to your regular inbox
+- No new account needed!
 
----
-
-### Step 2: Create a New Shortcut
-
-1. Tap the **+** button in the top right corner
-2. Tap the name at the top and rename it to: **Save to Airlock**
-
----
-
-### Step 3: Turn On Share Sheet
-
-This lets the shortcut appear when you tap "Share" in Safari:
-
-1. Tap the **ⓘ** button (bottom of screen)
-2. Turn ON **"Show in Share Sheet"**
-3. Tap **"Receives"** → uncheck everything EXCEPT:
-   - ✅ URLs
-   - ✅ Safari web pages
-4. Tap **Done**
+**Option B: Create a new Gmail account**
+- Go to [Gmail](https://mail.google.com) and create a new account
+- Example: `yourname.airlock@gmail.com`
+- This keeps Airlock emails separate from personal mail
 
 ---
 
-### Step 4: Add the Actions
+### Step 2: Create an App Password
 
-Now we'll add 3 "blocks" that tell the shortcut what to do:
+Gmail requires a special "App Password" for the ingestion system to read your emails. This is NOT your regular Gmail password.
 
-#### Block 1: Build the Message
+1. **Go to:** [Google App Passwords](https://myaccount.google.com/apppasswords)
 
-1. Tap **"Add Action"**
-2. Search for **"Text"** and tap it
-3. In the text box, paste this **exactly**:
+2. **Sign in** to the Gmail account you'll use for Airlock
 
-```
-{"ref":"main","inputs":{"url":"URL_GOES_HERE"}}
-```
+3. **Create an app password:**
+   - App name: `Content Airlock`
+   - Click **Create**
 
-4. Now we need to swap out `URL_GOES_HERE` with the actual article link:
-   - Tap on the words `URL_GOES_HERE` in your text
-   - Delete it
-   - Tap **"Shortcut Input"** from the variables (or tap ✨ magic wand and find it)
+4. **Copy the 16-character password** that appears (like `xxxx xxxx xxxx xxxx`)
+   - ⚠️ Save this somewhere safe — you won't see it again!
 
-Your text should now look like:
-```
-{"ref":"main","inputs":{"url":"[Shortcut Input]"}}
-```
+> **Note:** If you don't see the App Passwords option, you need to [enable 2-Step Verification](https://myaccount.google.com/signinoptions/two-step-verification) first.
 
 ---
 
-#### Block 2: Send to GitHub
+### Step 3: Add Secrets to GitHub
 
-1. Tap **"+"** to add another action
-2. Search for **"Get Contents of URL"** and tap it
-3. Tap the **URL** field and paste this (but change YOUR_USERNAME to your GitHub username):
+Go to your repository's secrets page:
+`https://github.com/YOUR_USERNAME/reading-ingestion/settings/secrets/actions`
 
-```
-https://api.github.com/repos/YOUR_USERNAME/reading-ingestion/actions/workflows/ingest_url.yml/dispatches
-```
+Add these secrets:
 
-> **Example:** If your username is `coolperson123`, it would be:  
-> `https://api.github.com/repos/coolperson123/reading-ingestion/actions/workflows/ingest_url.yml/dispatches`
+| Secret Name | Value | Required? |
+|-------------|-------|-----------|
+| `AIRLOCK_EMAIL` | Your Airlock email address (e.g., `yourname+airlock@gmail.com`) | ✅ Yes |
+| `AIRLOCK_EMAIL_PASSWORD` | The 16-character App Password from Step 2 | ✅ Yes |
+| `AIRLOCK_ALLOWED_SENDERS` | Your personal email address(es) that you'll send from | 🔒 Recommended |
 
-4. Tap **"Show More"** to reveal extra options
+#### 🔒 About Sender Allowlist
 
-5. Change **Method** to: **POST**
+**`AIRLOCK_ALLOWED_SENDERS`** is a security feature that ensures only emails from **your** email addresses are processed. This prevents someone from spamming your Airlock inbox with malicious URLs.
 
-6. Tap **"Add new header"** and add these 3 headers:
+**Examples:**
+- Single sender: `yourname@gmail.com`
+- Multiple senders: `yourname@gmail.com,yourname@icloud.com`
 
-   | Header Name | Value |
-   |-------------|-------|
-   | Accept | `application/vnd.github.v3+json` |
-   | Authorization | `token YOUR_TOKEN_HERE` (replace with your ghp_xxx token!) |
-   | User-Agent | `iOS Shortcut` |
+If you don't set this, all emails to your Airlock address will be processed — which is fine if you keep the email address private, but the allowlist adds an extra layer of protection.
 
-7. Change **Request Body** to: **File**
-
-8. Tap **File** and select the **Text** from Block 1
+That's it! The system is now configured.
 
 ---
 
-#### Block 3: Show a Confirmation (Optional but Nice!)
+## 📱 Using It from Your iPhone
 
-1. Tap **"+"** to add another action
-2. Search for **"Show Notification"**
-3. Set Title to: `✅ Saved!`
-4. Set Body to: `Article sent to your Airlock`
+### Saving an Article
 
----
+1. **Open any article** in Safari, Chrome, or any app
+2. **Tap the Share button** (square with arrow pointing up)
+3. **Tap Mail**
+4. **In the "To:" field**, type your Airlock email address
+5. **Tap Send** (you don't need to add a subject or body!)
 
-### Step 5: Test It!
+The article URL will be automatically extracted from the email and ingested!
 
-1. Open Safari and go to any article
-2. Tap the **Share** button (the square with arrow)
-3. Scroll down and tap **"Save to Airlock"**
-4. You should see your notification! 🎉
+### Pro Tip: Add to Contacts
 
----
+Add your Airlock email as a contact named "📚 Airlock" so it appears at the top of your contacts when sharing.
 
-## ✅ Checklist
+1. Open the **Contacts** app
+2. Tap **+** to add a new contact
+3. Name: `📚 Airlock`
+4. Email: `yourname+airlock@gmail.com`
+5. Save!
 
-Before testing, make sure:
-- [ ] You changed `YOUR_USERNAME` to your actual GitHub username
-- [ ] You pasted your token (the `ghp_xxx` code) in the Authorization header
-- [ ] The token includes the word `token ` before it (with a space!)
-- [ ] You selected "Shortcut Input" (not typed it as text)
+Now when you share via Mail, just type "Airlock" and it autocompletes!
 
 ---
 
-## 🆘 Troubleshooting
+## ⏱️ What Happens Next
 
-### "Nothing happens when I tap Save to Airlock"
-- Make sure your iPhone has internet
-- Double-check your username is spelled correctly
-
-### "I get an error"
-- Make sure your token starts with `ghp_`
-- Make sure you typed `token ` (with a space) before your token in Authorization
-- Make sure you haven't expired your token on GitHub
-
-### "I can't find the shortcut in Share menu"
-- Go back to Step 3 and make sure "Show in Share Sheet" is ON
-- Try closing Safari and opening it again
+1. **Once daily at 8 AM UTC**, GitHub checks your Airlock inbox
+2. It finds new emails and extracts any URLs
+3. Each article is fetched, cleaned, and categorized
+4. The article appears in your `data/` folder (or private storage repo)
+5. The email is marked as read
 
 ---
 
-## 🎉 You Did It!
+## 🎨 Bonus: Create a Shortcut for Even Faster Sharing
 
-Your articles will now automatically:
-1. Get fetched and cleaned up
-2. Be categorized by topic  
-3. Appear in your GitHub repo ready for NotebookLM!
+If you want to skip the Mail app entirely, you can create a simple shortcut that pre-fills the email:
 
-> **Note:** It takes about 30-60 seconds for articles to appear in your repo after saving.
+1. Open the **Shortcuts** app
+2. Tap **+** to create a new shortcut
+3. Name it: **Send to Airlock**
+4. Add these actions:
+   - **Get URLs from Input** (receives from Share Sheet)
+   - **Send Email**:
+     - To: `yourname+airlock@gmail.com`
+     - Subject: (leave empty)
+     - Body: Select the **URLs** variable
+     - **Turn ON "Show Compose Sheet"** (so you can review before sending)
+5. Tap the **(i)** button and enable **Show in Share Sheet**
+
+Now you can share directly to your Airlock shortcut!
 
 ---
 
-## 📝 Alternate Method: Email-Based (Even Easier!)
+## 🔧 Troubleshooting
 
-*Coming soon: We're working on an even simpler method where you can just email links to yourself!*
+### Articles aren't appearing
+- Check your GitHub Actions: `https://github.com/YOUR_USERNAME/reading-ingestion/actions`
+- Make sure the `AIRLOCK_EMAIL` and `AIRLOCK_EMAIL_PASSWORD` secrets are set
+- Verify the App Password is correct (no spaces)
+
+### "Authentication failed" error in Actions
+- Your App Password may have expired or been revoked
+- Create a new App Password and update the GitHub secret
+
+### Emails still showing as unread
+- The system marks emails as read after processing
+- If there's an error during processing, the email stays unread for retry
+
+---
+
+## 🔒 Security Notes
+
+- **No tokens on your phone**: Your GitHub credentials stay in GitHub
+- **App Password is limited**: It can only read email, not change your password
+- **Private by default**: If you've configured private storage, articles go there
+
+---
+
+## 📱 Using Other Email Apps
+
+This works with ANY app that can share via email:
+
+- **Safari**: Share → Mail
+- **Chrome**: Share → Mail  
+- **Twitter/X**: Share → Mail
+- **Pocket**: Share → Mail
+- **Any app with a Share button!**
