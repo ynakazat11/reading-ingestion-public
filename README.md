@@ -70,6 +70,11 @@ GitHub Actions workflow runs:
 - **Daily 8 AM UTC**: RSS polling
 - **Friday 8 PM UTC**: Weekly bundle creation
 
+## User Guides 📚
+
+*   **[iOS Shortcut Setup](docs/ios_shortcut_guide.md)**: How to set up a "Send to Airlock" button on your iPhone.
+*   **[Automation Explained](docs/github_automation.md)**: Details on the daily/weekly schedules and workflows.
+
 ## License
 
 MIT

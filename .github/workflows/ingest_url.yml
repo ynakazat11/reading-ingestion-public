@@ -1,0 +1,34 @@
+name: Ingest URL
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL to ingest'
+        required: true
+        type: string
+
+jobs:
+  ingest-ad-hoc:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - run: pip install -r requirements.txt
+      
+      - name: Ingest Article
+        run: python -m src.ingest "${{ inputs.url }}"
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # JINA_API_KEY: ${{ secrets.JINA_API_KEY }}
+          
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto: Ingested ${{ inputs.url }}"
+          file_pattern: 'data/*'
