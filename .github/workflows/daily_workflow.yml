@@ -22,7 +22,7 @@ jobs:
       - run: pip install -r requirements.txt
       
       - name: Checkout Private Storage (Optional)
-        if: env.STORAGE_REPO != ''
+        if: secrets.STORAGE_REPO != ''
         uses: actions/checkout@v4
         with:
           repository: ${{ secrets.STORAGE_REPO }}
@@ -44,7 +44,7 @@ jobs:
           STORAGE_REPO: ${{ secrets.STORAGE_REPO }}
           
       - name: Commit to Private Storage
-        if: env.STORAGE_REPO != ''
+        if: secrets.STORAGE_REPO != ''
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           repository: storage
@@ -52,7 +52,7 @@ jobs:
           file_pattern: 'data/*'
           
       - name: Commit to Local Repo
-        if: env.STORAGE_REPO == ''
+        if: secrets.STORAGE_REPO == ''
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Auto: RSS poll ingestion"
@@ -73,7 +73,7 @@ jobs:
       - run: pip install -r requirements.txt
       
       - name: Checkout Private Storage (Optional)
-        if: env.STORAGE_REPO != ''
+        if: secrets.STORAGE_REPO != ''
         uses: actions/checkout@v4
         with:
           repository: ${{ secrets.STORAGE_REPO }}
@@ -92,7 +92,7 @@ jobs:
           STORAGE_REPO: ${{ secrets.STORAGE_REPO }}
         
       - name: Commit to Private Storage
-        if: env.STORAGE_REPO != ''
+        if: secrets.STORAGE_REPO != ''
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           repository: storage
@@ -100,7 +100,7 @@ jobs:
           file_pattern: 'Digests/*'
 
       - name: Commit to Local Repo
-        if: env.STORAGE_REPO == ''
+        if: secrets.STORAGE_REPO == ''
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Auto: Weekly digest bundle"
