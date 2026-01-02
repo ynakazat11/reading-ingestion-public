@@ -106,7 +106,8 @@ def poll_feeds(sources_path: str, data_dir: str, hours: int):
                 # Ingest
                 logger.info(f"Found new article: {entry.title}")
                 try:
-                    ingest_url(link, output_root=data_dir)
+                    category_hint = feed_cfg.get('default_category')
+                    ingest_url(link, output_root=data_dir, category_hint=category_hint)
                     existing_urls.add(link)
                     new_articles_count += 1
                 except Exception as e:

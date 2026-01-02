@@ -22,7 +22,7 @@ jobs:
       - run: pip install -r requirements.txt
       
       - name: Checkout Private Storage (Optional)
-        if: secrets.STORAGE_REPO != ''
+        if: ${{ secrets.STORAGE_REPO != '' }}
         uses: actions/checkout@v4
         with:
           repository: ${{ secrets.STORAGE_REPO }}

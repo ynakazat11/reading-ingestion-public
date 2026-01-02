@@ -1,18 +1,28 @@
 {
     "feeds": [
         {
-            "name": "Anthropic Blog",
-            "url": "https://www.anthropic.com/rss.xml",
+            "name": "Anthropic Research",
+            "url": "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_research.xml",
             "default_category": "GenAI"
         },
         {
-            "name": "OpenAI Blog",
-            "url": "https://openai.com/blog/rss.xml",
+            "name": "Anthropic Engineering",
+            "url": "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_engineering.xml",
             "default_category": "GenAI"
         },
         {
-            "name": "Google AI Blog",
-            "url": "https://blog.google/technology/ai/rss/",
+            "name": "Anthropic News",
+            "url": "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_news.xml",
+            "default_category": "GenAI"
+        },
+        {
+            "name": "OpenAI News",
+            "url": "https://openai.com/news/rss.xml",
+            "default_category": "GenAI"
+        },
+        {
+            "name": "Google Research Blog",
+            "url": "https://research.google/blog/rss",
             "default_category": "GenAI"
         }
     ]

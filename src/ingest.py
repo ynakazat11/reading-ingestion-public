@@ -74,7 +74,7 @@ summary: "{summary}"
         
     return str(file_path)
 
-def ingest_url(url: str, output_root: str = "data") -> None:
+def ingest_url(url: str, output_root: str = "data", category_hint: Optional[str] = None) -> None:
     """
     Main orchestration function to ingest a single URL.
     """
@@ -89,6 +89,12 @@ def ingest_url(url: str, output_root: str = "data") -> None:
 
         # 2. Analyze with LLM
         metadata = categorize_article(markdown_content)
+        
+        # If we have a hint and the AI didn't find one (or we want to override), 
+        # we can use the hint here. For now, we'll just log it.
+        if category_hint:
+            logger.info(f"Source hinted category: {category_hint}")
+            
         logger.info(f"Categorized as: {metadata['category']}")
         
         # 3. Save to disk
