@@ -42,6 +42,9 @@ jobs:
           AIRLOCK_EMAIL_PASSWORD: ${{ secrets.AIRLOCK_EMAIL_PASSWORD }}
           AIRLOCK_IMAP_SERVER: ${{ secrets.AIRLOCK_IMAP_SERVER }}
           AIRLOCK_ALLOWED_SENDERS: ${{ secrets.AIRLOCK_ALLOWED_SENDERS }}
+          AIRLOCK_EMAIL_FOLDER: ${{ secrets.AIRLOCK_EMAIL_FOLDER }}
+          AIRLOCK_EMAIL_ACTION: ${{ secrets.AIRLOCK_EMAIL_ACTION }}
+          AIRLOCK_EMAIL_UNREAD_ONLY: ${{ secrets.AIRLOCK_EMAIL_UNREAD_ONLY }}
           STORAGE_REPO: ${{ secrets.STORAGE_REPO }}
 
       - name: Poll RSS Feeds

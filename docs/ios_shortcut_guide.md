@@ -15,7 +15,38 @@ That's it. No apps to install, no passwords stored on your phone.
 
 ---
 
-## 📋 One-Time Setup (10 minutes)
+## � Pro Strategy for Alias Users (Highly Recommended)
+
+If you use a Gmail alias (like `you+airlock@gmail.com`), the emails show up in your main inbox. If you accidentally click them, the system might skip them because they aren't "unread" anymore.
+
+**Here is the perfect fix (5 minutes):**
+
+### 1. Create an "Airlock" Label in Gmail
+- Open Gmail on your computer.
+- On the left, scroll down and click **"Create new label"**.
+- Name it: `Airlock`
+
+### 2. Set Up a Filter
+- Click the **Search options** icon (the sliders) in the Gmail search bar.
+- In the **"To"** field, type your alias: `you+airlock@gmail.com`
+- Click **"Create filter"**.
+- Check these boxes:
+  - [x] **Skip the Inbox (Archive it)**
+  - [x] **Apply the label:** Choose `Airlock`
+- Click **"Create filter"**.
+
+### 3. Update Your GitHub Secrets
+Add these new secrets so the system knows to look in your special folder and empty it when done:
+
+| Secret Name | Value | Description |
+|-------------|-------|-------------|
+| `AIRLOCK_EMAIL_FOLDER` | `Airlock` | Tells the system to check your new folder |
+| `AIRLOCK_EMAIL_ACTION` | `delete` | Tells the system to "cleanup" (Trash) after ingestion |
+| `AIRLOCK_EMAIL_UNREAD_ONLY` | `False` | Processes everything in the folder, even if you read it |
+
+---
+
+## �📋 One-Time Setup (10 minutes)
 
 ### Step 1: Create a Dedicated Email Address
 

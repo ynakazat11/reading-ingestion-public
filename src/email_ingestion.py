@@ -235,6 +235,20 @@ def mark_as_read(mail: imaplib.IMAP4_SSL, email_id: str) -> None:
     mail.store(email_id, '+FLAGS', '\\Seen')
 
 
+def delete_email(mail: imaplib.IMAP4_SSL, email_id: str) -> None:
+    """Move email to Trash/Deleted folder."""
+    # Most modern IMAP servers (Gmail, iCloud) support the \Deleted flag
+    # which moves it to Trash or hides it until EXPUNGE
+    mail.store(email_id, '+FLAGS', '\\Deleted')
+
+
+def move_email(mail: imaplib.IMAP4_SSL, email_id: str, destination: str) -> None:
+    """Move email to a different folder."""
+    result = mail.copy(email_id, destination)
+    if result[0] == 'OK':
+        mail.store(email_id, '+FLAGS', '\\Deleted')
+
+
 def process_inbox(
     email_address: str,
     password: str,
@@ -242,6 +256,8 @@ def process_inbox(
     folder: str = "INBOX",
     data_dir: str = "data",
     allowed_senders: Optional[list[str]] = None,
+    unread_only: bool = True,
+    post_process_action: str = "read",  # "read", "delete", "archive"
     dry_run: bool = False
 ) -> int:
     """
@@ -254,6 +270,8 @@ def process_inbox(
         folder: Email folder to check
         data_dir: Directory to store ingested articles
         allowed_senders: List of allowed sender emails (empty = allow all)
+        unread_only: If True, only process UNSEEN emails.
+        post_process_action: What to do after processing: 'read', 'delete', or 'archive'
         dry_run: If True, don't actually ingest
     
     Returns:
@@ -270,7 +288,21 @@ def process_inbox(
     
     try:
         mail = connect_to_inbox(email_address, password, imap_server)
-        emails = fetch_unread_emails(mail, folder)
+        
+        # Determine search criteria
+        if unread_only:
+            emails = fetch_unread_emails(mail, folder)
+        else:
+            # Fetch ALL emails in folder from last 7 days
+            mail.select(folder)
+            since_date = (datetime.now() - timedelta(days=7)).strftime("%d-%b-%Y")
+            status, messages = mail.search(None, f'(SINCE {since_date})')
+            emails = []
+            if status == 'OK':
+                for email_id in messages[0].split():
+                    status, msg_data = mail.fetch(email_id, '(RFC822)')
+                    if status == 'OK':
+                        emails.append((email_id.decode(), email.message_from_bytes(msg_data[0][1])))
         
         for email_id, msg in emails:
             subject = decode_email_subject(msg.get('Subject', ''))
@@ -280,9 +312,14 @@ def process_inbox(
             if not is_sender_allowed(sender, allowed_senders):
                 logger.warning(f"Skipping email from unauthorized sender: {sender}")
                 skipped_senders += 1
-                # Mark as read to avoid processing again
+                # Still apply post-process action so we don't keep seeing it
                 if not dry_run:
-                    mark_as_read(mail, email_id)
+                    if post_process_action == "delete":
+                        delete_email(mail, email_id)
+                    elif post_process_action == "archive":
+                        move_email(mail, email_id, "Archive")
+                    else:
+                        mark_as_read(mail, email_id)
                 continue
             
             logger.info(f"Processing email: '{subject}' from {sender}")
@@ -312,11 +349,22 @@ def process_inbox(
                 except Exception as e:
                     logger.error(f"Failed to ingest {url}: {e}")
             
-            # Mark email as read after processing
+            # Post-process email
             if not dry_run:
-                mark_as_read(mail, email_id)
-                logger.info(f"Marked email as read")
+                if post_process_action == "delete":
+                    delete_email(mail, email_id)
+                    logger.info(f"Deleted email (moved to trash)")
+                elif post_process_action == "archive":
+                    # For Gmail, 'archive' is usually moving to '[Gmail]/All Mail' 
+                    # but simple solution is to move to an 'Airlock-Archive' folder
+                    move_email(mail, email_id, "Archive")
+                    logger.info(f"Archived email")
+                else:
+                    mark_as_read(mail, email_id)
+                    logger.info(f"Marked email as read")
         
+        # Clean up deleted messages if any
+        mail.expunge()
         mail.close()
         mail.logout()
         
@@ -363,6 +411,18 @@ def main():
         help="Comma-separated list of allowed sender emails (or set AIRLOCK_ALLOWED_SENDERS env var)"
     )
     parser.add_argument(
+        "--unread-only",
+        type=lambda x: (str(x).lower() == 'true'),
+        default=(os.getenv("AIRLOCK_EMAIL_UNREAD_ONLY", "True").lower() == "true"),
+        help="Only process unread emails (default: True)"
+    )
+    parser.add_argument(
+        "--action",
+        choices=["read", "delete", "archive"],
+        default=os.getenv("AIRLOCK_EMAIL_ACTION", "read"),
+        help="Action after processing: read, delete, or archive (default: read)"
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Don't actually ingest, just show what would be done"
@@ -386,6 +446,8 @@ def main():
         folder=args.folder,
         data_dir=args.data_dir,
         allowed_senders=allowed_senders,
+        unread_only=args.unread_only,
+        post_process_action=args.action,
         dry_run=args.dry_run
     )
 
