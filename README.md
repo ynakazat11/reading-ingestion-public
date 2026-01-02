@@ -110,6 +110,32 @@ GitHub Actions workflow runs:
 *   **[📱 iOS/Mobile Setup](docs/ios_shortcut_guide.md)**: Save articles from your phone via email — no tokens needed!
 *   **[🔐 Private Storage Setup](docs/private_storage_setup.md)**: Keep your articles in a private repo.
 
+## ⚠️ Privacy & Disclaimer
+
+**IMPORTANT PRIVACY NOTICE**
+
+This software processes sensitive personal information including:
+- Email communications sent to your specified inbox
+- URLs from your browsing history
+- Content from articles you read
+
+> [!WARNING]
+> **YOU ARE SOLELY RESPONSIBLE FOR PROTECTING YOUR DATA**
+> 
+> - **NEVER run this software in a public repository** with your personal data
+> - The built-in workflow safety checks are designed to prevent accidental exposure, but **you remain solely responsible** for ensuring your repository visibility settings are correct
+> - The authors and contributors of this software **assume NO liability** for any data exposure, privacy breaches, or damages resulting from misconfiguration or misuse
+> - This software is provided "AS IS" without warranty of any kind (see LICENSE)
+
+**BY USING THIS SOFTWARE, YOU ACKNOWLEDGE THAT:**
+1. You understand the privacy risks associated with processing personal data
+2. You will only use this software in a properly secured, **private repository**
+3. You accept **full responsibility** for any privacy breaches or data exposure
+4. The authors and contributors are **NOT liable** for any direct, indirect, incidental, special, exemplary, or consequential damages arising from your use or misuse of this software
+
+For complete legal terms, see the [MIT License](LICENSE) included with this software.
+
+
 ## License
 
 MIT

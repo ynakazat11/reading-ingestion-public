@@ -19,6 +19,10 @@ This repository is a **template** for building your own personal content aggrega
 > [!WARNING]
 > **GitHub Actions workflows will refuse to run on public repositories** as a safety measure. They will fail with a clear error message if your repository is not private.
 
+> [!CAUTION]
+> **Privacy Disclaimer**: You are solely responsible for protecting your personal data. The authors of this software assume no liability for any privacy breaches or data exposure. See [Privacy & Disclaimer](README.md#️-privacy--disclaimer) for full details.
+
+
 ## Step 3: Follow Setup Instructions
 
 Now that you have a private fork, follow the setup in [README.md](README.md):
