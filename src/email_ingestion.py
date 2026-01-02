@@ -249,6 +249,42 @@ def move_email(mail: imaplib.IMAP4_SSL, email_id: str, destination: str) -> None
         mail.store(email_id, '+FLAGS', '\\Deleted')
 
 
+def url_already_ingested(url: str, data_dir: str = "data") -> bool:
+    """
+    Check if a URL has already been ingested by scanning markdown files.
+    
+    Args:
+        url: URL to check
+        data_dir: Root data directory containing category folders
+    
+    Returns:
+        True if URL found in any existing markdown file, False otherwise
+    """
+    data_path = Path(data_dir)
+    if not data_path.exists():
+        return False
+    
+    # Normalize URL for comparison (remove trailing slashes, query params can vary)
+    normalized_url = url.rstrip('/')
+    
+    # Search all markdown files in all category subdirectories
+    for md_file in data_path.rglob("*.md"):
+        try:
+            with open(md_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+                # Look for URL in frontmatter
+                if f'url: "{url}"' in content or f"url: '{url}'" in content:
+                    return True
+                # Also check normalized version
+                if f'url: "{normalized_url}"' in content or f"url: '{normalized_url}'" in content:
+                    return True
+        except Exception as e:
+            logger.warning(f"Error reading {md_file}: {e}")
+            continue
+    
+    return False
+
+
 def process_inbox(
     email_address: str,
     password: str,
@@ -340,6 +376,11 @@ def process_inbox(
             # Process each URL
             for url in urls:
                 try:
+                    # Check if URL already ingested (to save LLM costs)
+                    if url_already_ingested(url, data_dir):
+                        logger.info(f"Skipping already ingested URL: {url}")
+                        continue
+                    
                     if dry_run:
                         logger.info(f"[DRY RUN] Would ingest: {url}")
                     else:

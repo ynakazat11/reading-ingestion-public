@@ -81,6 +81,7 @@ jobs:
           repository: storage
           commit_message: "Auto: Daily ingestion (email + RSS)"
           file_pattern: 'data/*'
+          push_options: '--force-with-lease'
           
       - name: Commit to Local Repo
         if: env.STORAGE_REPO == ''
@@ -143,6 +144,7 @@ jobs:
           repository: storage
           commit_message: "Auto: Weekly digest bundle"
           file_pattern: 'Digests/*'
+          push_options: '--force-with-lease'
 
       - name: Commit to Local Repo
         if: env.STORAGE_REPO == ''

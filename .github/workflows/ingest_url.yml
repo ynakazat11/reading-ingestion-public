@@ -63,6 +63,7 @@ jobs:
           repository: storage
           commit_message: "Auto: Ingested ${{ inputs.url }}"
           file_pattern: 'data/*'
+          push_options: '--force-with-lease'
           
       - name: Commit to Local Repo
         if: env.STORAGE_REPO == ''
