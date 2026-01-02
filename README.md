@@ -1,5 +1,7 @@
 # Content Airlock
 
+> ⚠️ **PRIVACY WARNING**: This repository should be **PRIVATE**. It processes personal emails and stores articles from your browsing history, which may expose sensitive information.
+
 A system to aggregate technical articles from ad-hoc browsing and RSS feeds, process them with LLM categorization, and bundle them into digest files for NotebookLM upload.
 
 ## Quick Start
@@ -47,37 +49,26 @@ reading-ingestion/
 └── requirements.txt
 ```
 
-## Scripts
+## Categories
 
-### `ingest.py`
-Fetches a URL via Jina Reader, categorizes with LLM, and saves as Markdown.
+Articles are automatically categorized into these textbook-style categories:
 
-```bash
-python -m src.ingest "https://www.anthropic.com/news/claude-3-5-sonnet"
-```
-
-### `poll_rss.py`
-Checks RSS feeds for new posts and ingests them automatically.
-
-```bash
-python -m src.poll_rss --hours 24
-```
-
-### `email_ingestion.py`
-Polls an email inbox for URLs shared from mobile devices.
-
-```bash
-python -m src.email_ingestion --dry-run  # Preview without processing
-```
-
-### `bundle.py`
-Creates category-based digest files from recent articles.
-
-```bash
-python -m src.bundle --days 7 --category GenAI
-```
-
-Default categories: `GenAI`, `Hardware`, `Finance`, `Coding`, `Security`, `Cloud`, `Other`
+| Category | Description |
+|----------|-------------|
+| `ML-Fundamentals` | Core ML theory, math, algorithms |
+| `LLM-Architecture` | Transformers, attention, model design |
+| `LLM-Training` | Pre-training, fine-tuning, RLHF |
+| `LLM-Inference` | Serving, optimization, quantization |
+| `Prompt-Engineering` | Prompting techniques, chain-of-thought |
+| `AI-Agents` | Agentic systems, tool use, planning |
+| `ML-Applications` | Computer vision, NLP, recommenders |
+| `ML-Ops` | Training infra, deployment, monitoring |
+| `Systems` | Distributed systems, databases |
+| `Security` | Cybersecurity, privacy, AI safety |
+| `Software-Engineering` | Architecture, testing, best practices |
+| `Hardware` | GPUs, chips, edge devices |
+| `Product-Management` | Strategy, metrics, roadmaps |
+| `Other` | Anything else |
 
 ## ⚙️ GitHub Setup (Required for Automation)
 
