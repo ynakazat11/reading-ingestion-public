@@ -55,16 +55,20 @@ Gmail requires a special "App Password" for the ingestion system to read your em
 
 ### Step 3: Add Secrets to GitHub
 
-Go to your repository's secrets page:
-`https://github.com/YOUR_USERNAME/reading-ingestion/settings/secrets/actions`
+Go to your repository's secrets page:  
+`Settings > Secrets and variables > Actions`
 
-Add these secrets:
+Add these secrets so the automation can run:
 
 | Secret Name | Value | Required? |
 |-------------|-------|-----------|
-| `AIRLOCK_EMAIL` | Your Airlock email address (e.g., `yourname+airlock@gmail.com`) | ✅ Yes |
+| `OPENAI_API_KEY` | Your OpenAI API key (`sk-...`) | ✅ **CRITICAL** |
+| `AIRLOCK_EMAIL` | Your Airlock email (e.g., `yourname+airlock@gmail.com`) | ✅ Yes |
 | `AIRLOCK_EMAIL_PASSWORD` | The 16-character App Password from Step 2 | ✅ Yes |
-| `AIRLOCK_ALLOWED_SENDERS` | Your personal email address(es) that you'll send from | 🔒 Recommended |
+| `AIRLOCK_ALLOWED_SENDERS` | Your personal email address(es) | 🔒 Recommended |
+
+> [!IMPORTANT]
+> **Don't forget the `OPENAI_API_KEY`!** Even if you set up the email correctly, the system needs the AI key to "read" and categorize your articles.
 
 #### 🔒 About Sender Allowlist
 

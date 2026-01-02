@@ -77,9 +77,24 @@ Creates category-based digest files from recent articles.
 python -m src.bundle --days 7 --category GenAI
 ```
 
-## Categories
-
 Default categories: `GenAI`, `Hardware`, `Finance`, `Coding`, `Security`, `Cloud`, `Other`
+
+## ⚙️ GitHub Setup (Required for Automation)
+
+To make the daily automation work, you must add your API keys to your GitHub repository secrets:
+
+1.  Go to your repo on GitHub: **Settings > Secrets and variables > Actions**
+2.  Click **New repository secret** for each of these:
+
+| Secret Name | Description | Required? |
+|-------------|-------------|-----------|
+| `OPENAI_API_KEY` | Your OpenAI API key (`sk-...`) | ✅ Yes |
+| `AIRLOCK_EMAIL` | Your Airlock email (e.g., `you+airlock@gmail.com`) | 📱 For Mobile |
+| `AIRLOCK_EMAIL_PASSWORD` | Your Email App Password (16 chars) | 📱 For Mobile |
+| `PAT_TOKEN` | A GitHub Classic Token (for private storage) | 🔐 For Private Repo |
+| `STORAGE_REPO` | `username/repo-name` for private storage | 🔐 For Private Repo |
+
+*Optional: Set `LLM_PROVIDER=gemini` and `GOOGLE_API_KEY` if you prefer Google's models.*
 
 ## Automation
 
