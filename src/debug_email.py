@@ -51,6 +51,9 @@ def debug_connection():
     
     # Check INBOX
     check_folder(mail, "INBOX")
+    
+    # Check the Airlock folder (where alias emails should arrive)
+    check_folder(mail, "Airlock")
 
     # Check [Gmail]/All Mail if it exists (common for Gmail aliases)
     check_folder(mail, "[Gmail]/All Mail")
