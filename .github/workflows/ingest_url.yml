@@ -16,6 +16,18 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Verify Repository is Private
+        run: |
+          if [ "${{ github.event.repository.private }}" != "true" ]; then
+            echo "❌ ERROR: This workflow only runs on PRIVATE repositories for privacy reasons."
+            echo "This workflow processes personal emails and browsing history."
+            echo ""
+            echo "Please make your repository private to use automation features."
+            echo "Go to: Settings → General → Danger Zone → Change visibility → Make private"
+            exit 1
+          fi
+          echo "✅ Repository is private. Proceeding with workflow..."
+      
       - uses: actions/checkout@v4
       
       - uses: actions/setup-python@v5
