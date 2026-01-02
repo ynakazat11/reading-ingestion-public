@@ -1,5 +1,9 @@
 # GitHub Automation Guide
 
+> [!IMPORTANT]
+> **Prerequisite**: These automation features only work in **PRIVATE** repositories. If you haven't forked and made your repository private yet, see [GETTING_STARTED.md](../GETTING_STARTED.md) first.
+
+
 Content Airlock uses GitHub Actions to automate the ingestion and bundling process. This means you don't need a server running 24/7.
 
 ## Workflows

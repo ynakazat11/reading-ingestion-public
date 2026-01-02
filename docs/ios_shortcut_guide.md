@@ -1,5 +1,9 @@
 # 📱 Save Articles from Your iPhone
 
+> [!IMPORTANT]
+> **Before following this guide**: Make sure you've forked this repository and made your fork **PRIVATE**. The automation features described here only work in private repositories. See [GETTING_STARTED.md](../GETTING_STARTED.md) for setup instructions.
+
+
 Send any article to your Content Airlock by **sharing it to email**. No tokens, no complicated setup — just share!
 
 ---

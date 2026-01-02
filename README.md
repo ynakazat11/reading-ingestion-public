@@ -1,8 +1,20 @@
 # Content Airlock
 
-> ⚠️ **PRIVACY WARNING**: This repository should be **PRIVATE**. It processes personal emails and stores articles from your browsing history, which may expose sensitive information.
+> [!CAUTION]
+> **DO NOT USE THIS REPOSITORY DIRECTLY FOR YOUR PERSONAL CONTENT**
+> 
+> This is a **public template** for the Content Airlock system. If you want to use this for yourself:
+> 1. **Fork this repository** to your own GitHub account
+> 2. **Make your fork PRIVATE** (Settings → General → Danger Zone → Change visibility)
+> 3. Follow the setup instructions in your private fork
+>
+> 🔒 **Why Private?** This system processes personal emails and browsing history. GitHub Actions workflows are configured to **only run on private repositories** for your safety.
 
 A system to aggregate technical articles from ad-hoc browsing and RSS feeds, process them with LLM categorization, and bundle them into digest files for NotebookLM upload.
+
+## 🚀 For Your Own Use
+
+Want to set up your own instance? See **[GETTING_STARTED.md](GETTING_STARTED.md)** for step-by-step instructions on forking and configuring your private copy.
 
 ## Quick Start
 

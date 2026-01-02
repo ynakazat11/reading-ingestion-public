@@ -1,5 +1,9 @@
 # Private Data Storage Setup
 
+> [!IMPORTANT]
+> **Prerequisite**: Your main repository (the one running these workflows) must already be **PRIVATE**. If you haven't done this yet, see [GETTING_STARTED.md](../GETTING_STARTED.md) first.
+
+
 If you want to keep your **ingested articles private** (for security), you can configure Content Airlock to store data in a separate private repository.
 
 ## Overview
