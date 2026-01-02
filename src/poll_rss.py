@@ -6,7 +6,7 @@ import sys
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import List, Set
+from typing import List, Set, Optional
 import feedparser
 import yaml
 from dateutil import parser as date_parser

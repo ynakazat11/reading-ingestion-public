@@ -5,6 +5,7 @@ import os
 import re
 from datetime import date
 from pathlib import Path
+from typing import Optional
 from dotenv import load_dotenv
 
 # Add project root to path so we can import src
