@@ -141,6 +141,19 @@ Now when you share via Mail, just type "Airlock" and it autocompletes!
 
 ---
 
+## 📦 Batching Multiple Articles
+
+The Airlock is smart! You can send multiple links in a single email, and it will process all of them as separate articles.
+
+### How to do it:
+1. **Copy** several links throughout the day (into your Notes app or a Draft email).
+2. **Send one email** containing all the links to your Airlock address.
+3. Every link found in the email will be extracted and saved individually.
+
+This is a great way to "clear out" your open Safari tabs at the end of the day!
+
+---
+
 ## ⏱️ What Happens Next
 
 1. **Once daily at 8 AM UTC**, GitHub checks your Airlock inbox
