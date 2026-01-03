@@ -99,11 +99,23 @@ To make the daily automation work, you must add your API keys to your GitHub rep
 
 *Optional: Set `LLM_PROVIDER=gemini` and `GOOGLE_API_KEY` if you prefer Google's models.*
 
-## Automation
+### Automation
 
 GitHub Actions workflow runs:
 - **Daily 8 AM UTC**: Email inbox + RSS feed polling
 - **Friday 8 PM UTC**: Weekly bundle creation
+
+#### 🔄 Re-enabling Automation
+
+By default, GitHub Actions are disabled in this reference implementation to save on Action minutes. To enable them:
+
+1.  **Rename Workflow Files**:
+    ```bash
+    mv .github/workflows/daily_workflow.yml.disabled .github/workflows/daily_workflow.yml
+    mv .github/workflows/ingest_url.yml.disabled .github/workflows/ingest_url.yml
+    ```
+2.  **Commit and Push**: Push these changes to your repository.
+3.  **Check GitHub Settings**: Ensure Actions are enabled in your repo under **Settings > Actions > General**.
 
 ## User Guides 📚
 
