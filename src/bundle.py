@@ -56,11 +56,16 @@ def bundle_category(category_path: Path, days: int, output_dir: Path):
     # Create valid filename
     today_str = date.today().isoformat()
     digest_filename = f"Weekly_Digest_{category}_{today_str}.md"
-    digest_path = output_dir / digest_filename
-    
+
+    # Create date-based subfolder
+    date_folder = output_dir / today_str
+    date_folder.mkdir(parents=True, exist_ok=True)
+    digest_path = date_folder / digest_filename
+
     # Build Content
     toc_lines = []
     content_blocks = []
+    url_list = []
     
     for i, file_path in enumerate(files_to_bundle):
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -70,7 +75,8 @@ def bundle_category(category_path: Path, days: int, output_dir: Path):
         title = get_frontmatter_value(raw_content, "title")
         url = get_frontmatter_value(raw_content, "url")
         summary = get_frontmatter_value(raw_content, "summary")
-        
+        url_list.append(url)
+
         # Remove frontmatter for inclusion
         # Assume frontmatter ends at second ---
         parts = raw_content.split('---', 2)
@@ -89,12 +95,16 @@ def bundle_category(category_path: Path, days: int, output_dir: Path):
 {body}
 """
         content_blocks.append(block)
-        
+
     # Assemble Final Markdown
+    sources_section = "## Sources\n" + "\n".join(f"- {url}" for url in url_list)
+
     full_content = f"""# Weekly Digest: {category} - {today_str}
 
 ## Table of Contents
 {chr(10).join(toc_lines)}
+
+{sources_section}
 
 {chr(10).join(content_blocks)}
 """
